@@ -1,148 +1,126 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>Calculator and Timer</title>
-
 <style>
-
-body{
-font-family:Arial;
-text-align:center;
-background-color:#f2f2f2;
+body {
+  font-family: Arial;
+  text-align: center;
+  background-color: #f2f2f2;
 }
-
-.container{
-margin-top:30px;
+.container {
+  margin-top: 30px;
 }
-
-input{
-width:200px;
-height:30px;
-font-size:18px;
-text-align:right;
+input {
+  width: 200px;
+  height: 30px;
+  font-size: 18px;
+  text-align: right;
 }
-
-button{
-width:50px;
-height:40px;
-margin:5px;
-font-size:18px;
+button {
+  width: 50px;
+  height: 40px;
+  margin: 5px;
+  font-size: 18px;
 }
-
-.timer{
-margin-top:40px;
+.timer {
+  margin-top: 40px;
 }
-
 </style>
-
 </head>
-
 <body>
-
 <h1>Calculator and Timer Counter</h1>
 
 <div class="container">
-
-<h2>Calculator</h2>
-
-<input type="text" id="display" readonly>
-
-<br>
-
-<button onclick="add('7')">7</button>
-<button onclick="add('8')">8</button>
-<button onclick="add('9')">9</button>
-<button onclick="add('/')">/</button>
-
-<br>
-
-<button onclick="add('4')">4</button>
-<button onclick="add('5')">5</button>
-<button onclick="add('6')">6</button>
-<button onclick="add('*')">*</button>
-
-<br>
-
-<button onclick="add('1')">1</button>
-<button onclick="add('2')">2</button>
-<button onclick="add('3')">3</button>
-<button onclick="add('-')">-</button>
-
-<br>
-
-<button onclick="add('0')">0</button>
-<button onclick="clearDisplay()">C</button>
-<button onclick="calculate()">=</button>
-<button onclick="add('+')">+</button>
-
+  <h2>Calculator</h2>
+  <input type="text" id="display" readonly>
+  <br>
+  <button onclick="add('7')">7</button>
+  <button onclick="add('8')">8</button>
+  <button onclick="add('9')">9</button>
+  <button onclick="add('/')">/</button>
+  <br>
+  <button onclick="add('4')">4</button>
+  <button onclick="add('5')">5</button>
+  <button onclick="add('6')">6</button>
+  <button onclick="add('*')">*</button>
+  <br>
+  <button onclick="add('1')">1</button>
+  <button onclick="add('2')">2</button>
+  <button onclick="add('3')">3</button>
+  <button onclick="add('-')">-</button>
+  <br>
+  <button onclick="add('0')">0</button>
+  <button onclick="clearDisplay()">C</button>
+  <button onclick="calculate()">=</button>
+  <button onclick="add('+')">+</button>
 </div>
 
 <div class="timer">
-
-<h2>Timer Counter</h2>
-
-<h1 id="time">0</h1>
-
-<button onclick="startTimer()">Start</button>
-
-<button onclick="stopTimer()">Stop</button>
-
-<button onclick="resetTimer()">Reset</button>
-
+  <h2>Timer Counter</h2>
+  <h1 id="time">00:00:00</h1>
+  <button onclick="startTimer()">Start</button>
+  <button onclick="stopTimer()">Stop</button>
+  <button onclick="resetTimer()">Reset</button>
 </div>
 
 <script>
-
-function add(value)
-{
-document.getElementById("display").value += value;
+// ---- CALCULATOR ----
+function add(value) {
+  document.getElementById("display").value += value;
 }
 
-function clearDisplay()
-{
-document.getElementById("display").value="";
+function clearDisplay() {
+  document.getElementById("display").value = "";
 }
 
-function calculate()
-{
-let result=
-eval(document.getElementById("display").value);
-
-document.getElementById("display").value=result;
+function calculate() {
+  try {
+    let result = eval(document.getElementById("display").value);
+    if (result === undefined) {
+      document.getElementById("display").value = "Error";
+    } else {
+      document.getElementById("display").value = result;
+    }
+  } catch (e) {
+    document.getElementById("display").value = "Error";
+  }
 }
 
-let seconds=0;
+// ---- TIMER ----
+let seconds = 0;
+let timer = null;
 
-let timer;
-
-function startTimer()
-{
-timer=setInterval(function(){
-
-seconds++;
-
-document.getElementById("time").innerHTML=seconds;
-
-},1000);
+function pad(n) {
+  return n < 10 ? "0" + n : n;
 }
 
-function stopTimer()
-{
-clearInterval(timer);
+function updateDisplay() {
+  let h = Math.floor(seconds / 3600);
+  let m = Math.floor((seconds % 3600) / 60);
+  let s = seconds % 60;
+  document.getElementById("time").innerHTML = pad(h) + ":" + pad(m) + ":" + pad(s);
 }
 
-function resetTimer()
-{
-clearInterval(timer);
-
-seconds=0;
-
-document.getElementById("time").innerHTML=seconds;
+function startTimer() {
+  if (timer !== null) return;
+  timer = setInterval(function() {
+    seconds++;
+    updateDisplay();
+  }, 1000);
 }
 
+function stopTimer() {
+  clearInterval(timer);
+  timer = null;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timer = null;
+  seconds = 0;
+  updateDisplay();
+}
 </script>
-
 </body>
-
 </html>
